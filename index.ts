@@ -1,13 +1,14 @@
 import express from 'express';
-import BodyParser from 'body-parser';
+import bodyParser from 'body-parser';
+import registerUIRoutes from './client/routes';
+import { PORT } from './config';
 
-const app = express();
+const server = express();
 
-app.use(BodyParser.json());
-app.get('*', (req, res) => {
-    res.json('Hello World');
-});
+registerUIRoutes(server);
 
-app.listen(3000, () => {
-    console.log('Server running on 3000');
+server.use(bodyParser.json());
+
+server.listen(PORT, () => {
+    console.log(`Server running on ${PORT}`);
 });
