@@ -1,4 +1,6 @@
+import ReactDOM from 'react-dom';
 import React, { Component } from 'react';
+import request, { post } from 'request';
 
 interface IMemoryUsage {
     usage: string;
@@ -7,28 +9,30 @@ interface IMemoryUsage {
 
 interface IState {
     memoryUsageData?: IMemoryUsage[];
+    startTime?: number;
+    endTime?: number;
 }
 
-class MemoryUsageChart extends Component<null, IState> {
+class MemoryUsageChart extends Component<any, IState> {
     constructor(props){
         super(props);
 
         this.state = {
             memoryUsageData: [],
+            startTime: -Infinity,
+            endTime: Infinity,
         };
     }
     public componentDidMount() {
-        fetch('/fetchMemoryUsage')
-        .then(response => response.json())
-        .then((data: IMemoryUsage[]) => {
-            console.log({ data });
+        request.post('/fetchMemoryUsage', {
+            start: 1544074441873,
+        }, (data: IMemoryUsage[]) => {
             this.setState({ memoryUsageData: data });
-        }, (err: Error) => {
-            console.log('error fetching data ');
-        });
+        })
     }
 
     public render () {
+        console.log({state: this.state});
         const rows = this.state.memoryUsageData.map(({ usage, timestamp }) => {
             <div>
                 <div>{usage}</div>
@@ -40,4 +44,4 @@ class MemoryUsageChart extends Component<null, IState> {
     }
 }
 
-export default MemoryUsageChart;
+ReactDOM.render(<MemoryUsageChart />, document.getElementById('app-root'));

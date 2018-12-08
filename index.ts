@@ -1,16 +1,22 @@
+import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
-import registerUIRoutes from './views/routes';
-import { fetchMemoryUsage } from './controller';
+import { Request, Response } from 'express-serve-static-core';
+import { fetchMemoryUsage } from './controllers';
 import { PORT } from './config';
+import serveStatic from 'serve-static';
 
 const server = express();
 
-registerUIRoutes(server);
+server.use(bodyParser.json());
+server.use(bodyParser.urlencoded({ extended: true }));
+server.use(express.static(__dirname + '/public'));
 
 server.post('/fetchMemoryUsage', fetchMemoryUsage);
 
-server.use(bodyParser.json());
+server.get('*', (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, '/public/index.html'));
+});
 
 server.listen(PORT, () => {
     console.log(`Server running on ${PORT}`);

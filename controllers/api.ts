@@ -17,7 +17,7 @@ class API {
         });
     }
 
-    public fetchData = (startTime: number = -Infinity, endTime: number = new Date().getTime(), callback?: TCallback) => {
+    public fetchData = (startTime: number, endTime: number, callback?: TCallback) => {
         const condition = {
             usage: {
                 $lte: endTime,
@@ -39,19 +39,20 @@ class API {
             });
         });
     }
-
-    private parseData = (data: any[], startTime: number, endTime: number, callback: TCallback) => {
+    
+    public parseData = (data: any[], startTime: number, endTime: number, callback: TCallback) => {
         const outputData = [];
-        data.forEach((row: any, index: number) => {
-            const usage = parseInt(row.usage);
-            if((usage >= startTime) && (usage <= endTime)) {
+        for(let i = 0; i < data.length; i++) {
+            const row = data[i];
+            const timestamp = parseInt(row.timestamp);
+            if((timestamp >= startTime) && (timestamp <= endTime)) {
                 outputData.push(row);
             }
     
-            if(index === data.length - 1) {
+            if(i === data.length - 1) {
                 callback(outputData);
             }
-        });
+        };
     }
 }
 
