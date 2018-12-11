@@ -1,10 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import * as React from 'react';
 
-interface IMemoryUsage {
-    usage: string;
-    timestamp: string;
-}
+import { IMemoryUsage } from '../interfaces';
 
 interface IState {
     error?: string;
@@ -27,8 +24,9 @@ class MemoryUsageChart extends React.Component<any, IState> {
         };
     }
     public componentDidMount() {
+        const { startTime, endTime } = this.state;
         axios.post(`${BASE_URL}/fetchMemoryUsage`, {
-            start: 1544074441873,
+            startTime, endTime,
         })
         .then((data: AxiosResponse) => {
             this.setState({ memoryUsageData: data.data ? data.data : [{usage: 20, timestamp: 123}] });
@@ -40,14 +38,18 @@ class MemoryUsageChart extends React.Component<any, IState> {
 
     public render () {
       const memoryUsage = this.state.memoryUsageData ? this.state.memoryUsageData : [];
-      const rows = memoryUsage.map(({ usage, timestamp }: any) => (
-        <div>
-            <div>{usage}</div>
-            <div>{timestamp}</div>
-        </div>
-      ));
 
-      return <div>{...rows}</div>;
+      return (<div>
+          {
+              memoryUsage.map(({ usage, timestamp }: IMemoryUsage, index: number) => (
+                <div key={`${index}`}>
+                    <div>{usage}</div>
+                    <div>{timestamp}</div>
+                </div>
+              ))
+          }
+      </div>
+      );
     }
 }
 
