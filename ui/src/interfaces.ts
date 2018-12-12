@@ -6,6 +6,7 @@ export interface IAction {
 }
 
 export interface IMemoryUsage {
+    _id: number;
     usage: string;
     timestamp: string;
 }

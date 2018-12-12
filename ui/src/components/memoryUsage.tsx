@@ -1,43 +1,38 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { isEqual } from 'lodash';
 
-import { IMemoryUsage } from '../interfaces';
+import { fetchDataThunkAction } from '../thunk-actions';
+import { IMemoryUsage, IStore } from '../interfaces';
+
+interface IMemoryUsageProps {
+    memoryUsageData?: IMemoryUsage[];
+}
+
+interface IDispatchToProps {
+    fetchData: typeof fetchDataThunkAction;
+}
 
 interface IState {
-    error?: string;
-    memoryUsageData?: IMemoryUsage[];
     startTime?: number;
     endTime?: number;
 }
 
-const BASE_URL = 'http://localhost:9000';
+type IProps = IMemoryUsageProps & IDispatchToProps;
 
-class MemoryUsageChart extends React.Component<any, IState> {
-    constructor(props: any){
-        super(props);
-
-        this.state = {
-            endTime: Infinity,
-            error: '',
-            memoryUsageData: [],
-            startTime: -Infinity,
-        };
-    }
+class MemoryUsageChart extends React.Component<IProps, IState> {
     public componentDidMount() {
-        const { startTime, endTime } = this.state;
-        axios.post(`${BASE_URL}/fetchMemoryUsage`, {
-            startTime, endTime,
-        })
-        .then((data: AxiosResponse) => {
-            this.setState({ memoryUsageData: data.data ? data.data : [{usage: 20, timestamp: 123}] });
-        })
-        .catch(({ response }: AxiosError) => {
-            this.setState({error: response ? response.toString() : 'Error fetching data.'});
-        })
+        const startTime = -Infinity;
+        const endTime = Infinity;
+        this.props.fetchData(startTime, endTime);
+    }
+
+    public shouldComponentUpdate(newProps: IProps) {
+        return !isEqual(newProps.memoryUsageData, this.props.memoryUsageData);
     }
 
     public render () {
-      const memoryUsage = this.state.memoryUsageData ? this.state.memoryUsageData : [];
+      const memoryUsage = this.props.memoryUsageData ? this.props.memoryUsageData : [];
 
       return (<div>
           {
@@ -53,4 +48,14 @@ class MemoryUsageChart extends React.Component<any, IState> {
     }
 }
 
-export default MemoryUsageChart;
+const mapDispatchToProps: IDispatchToProps = {
+    fetchData: fetchDataThunkAction,
+}
+
+const mapStateToProps = (state: IStore) => {
+    return {
+        memoryUsageData: state.data,
+    };
+}
+
+export default connect<any, any, any>(mapStateToProps, mapDispatchToProps)(MemoryUsageChart);
