@@ -1,20 +1,41 @@
 import MemoryUsage from '../models/memoryUsage';
+import os from 'os';
 
 type TCallback = (...args) => any;
 
 class API {
-    public addMemoryUsageToDB = (usage: number, callback: TCallback) => {
-        new MemoryUsage({
-            timestamp: new Date().getTime(),
-            usage,
-        }).save((err: any, data: any) => {
-            if(err) {
-                console.log(`Error: ${err}`);
-                callback(null);
-            } else {
-                callback(data);
-            }
-        });
+    private interval: NodeJS.Timer;
+    public startIntervalFetching = (interval: number) => {
+        if(this.interval) {
+            this.clearIntervalFetching();
+        }
+
+        this.interval = setInterval(() => {
+            this.addMemoryUsageToDB(() => {});
+        }, interval);
+    }
+
+    public clearIntervalFetching = () => {
+        clearInterval(this.interval);
+    }
+
+    public addMemoryUsageToDB = (callback: TCallback) => {
+        const date = new Date();
+        const usage = os.totalmem() - os.freemem();
+        const timestamp = date.getTime();
+        new MemoryUsage({ timestamp, usage })
+            .save((err: any, data: any) => {
+                if(err) {
+                    console.log(`Error: ${err}`);
+                    callback(null);
+                } else {
+                    console.log({
+                        usage,
+                        timestamp: date.toLocaleString(),
+                    });
+                    callback(data);
+                }
+            });
     }
 
     public fetchData = (startTime: number, endTime: number, callback?: TCallback) => {

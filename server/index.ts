@@ -1,7 +1,5 @@
-import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
-import { Request, Response } from 'express-serve-static-core';
 import { fetchMemoryUsage } from './controllers';
 import { PORT } from './config';
 import cors from 'cors';
