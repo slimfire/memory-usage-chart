@@ -1,5 +1,5 @@
 import { ACTION_TYPES } from './action-types';
-import { IMemoryUsage } from '../interfaces';
+import { IMemoryUsage, IOSSpec } from '../interfaces';
 
 export const fetchData = (startTime: number | string, endTime: number | string) => {
     return {
@@ -8,6 +8,30 @@ export const fetchData = (startTime: number | string, endTime: number | string) 
             startTime, endTime,
         }
     }
+}
+
+export const fetchOSSpec = () => {
+    return {
+        type: ACTION_TYPES.FETCH_OS_SPEC,
+    };
+}
+
+export const fetchOSSpecSuccess = (OSSpec: IOSSpec) => {
+    return {
+        type: ACTION_TYPES.FETCH_OS_SPEC_SUCCESS,
+        payload: {
+            OSSpec,
+        },
+    };
+}
+
+export const fetchOSSpecError = (error?: string) => {
+    return {
+        type: ACTION_TYPES.FETCH_OS_SPEC_SUCCESS,
+        payload: {
+            error,
+        },
+    };
 }
 
 export const fetchDataSuccess = (data: IMemoryUsage[]) => {

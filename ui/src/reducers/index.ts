@@ -19,12 +19,20 @@ export const memoryUsageReducer = (state: IStore = defaultState, action: IAction
             });
 
             return {
+                ...state,
                 data: [
                     ...storeData,
                     ...newData,
                 ]
             }
         }
+
+        case ACTION_TYPES.FETCH_OS_SPEC_SUCCESS:
+            const { OSSpec } = action.payload;
+            return {
+                ...state,
+                OSSpec,
+            };
 
         default:{
             return state;

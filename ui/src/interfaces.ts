@@ -11,6 +11,15 @@ export interface IMemoryUsage {
     timestamp: string;
 }
 
+export interface IOSSpec {
+    memory: number;
+    speed: number;
+    model: string;
+    arch: string;
+    CPUs: number;
+}
+
 export interface IStore {
     data?: IMemoryUsage[];
+    OSSpec?: IOSSpec;
 }
