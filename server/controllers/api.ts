@@ -1,5 +1,6 @@
 import MemoryUsage from '../models/memoryUsage';
-import os from 'os';
+import os, { cpus } from 'os';
+import { callbackify } from 'util';
 
 type TCallback = (...args) => any;
 
@@ -59,6 +60,23 @@ class API {
                 callback(outputData);
             });
         });
+    }
+
+    public getOSSpec = (callback: TCallback) => {
+        const memory = os.totalmem();
+        const CPUs = os.cpus();
+        const CPUsCount = CPUs.length;
+        const arch = os.arch();
+        const model = CPUs.length > 1 ? CPUs[0].model : '';
+        const speed = CPUs.length > 1 ? (CPUs[0].speed/1000).toFixed(1) : '';
+
+        callback({
+            CPUs: CPUsCount,
+            arch,
+            model,
+            speed,
+            memory,
+        })
     }
     
     public parseData = (data: any[], startTime: number, endTime: number, callback: TCallback) => {

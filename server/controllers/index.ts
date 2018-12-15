@@ -1,4 +1,4 @@
 import API from './api';
-import { fetchMemoryUsage } from './routes';
+import { fetchMemoryUsage, getOSSpec } from './routes';
 
-export { API, fetchMemoryUsage };
+export { API, fetchMemoryUsage, getOSSpec };

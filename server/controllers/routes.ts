@@ -13,3 +13,9 @@ export const fetchMemoryUsage = (req: Request, res: Response) => {
         res.json(data ? data : []);
     });
 }
+
+export const getOSSpec = (req: Request, res: Response) => {
+    API.getOSSpec((spec) => {
+        res.json(spec);
+    });
+}
