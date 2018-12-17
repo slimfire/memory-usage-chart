@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Tooltip } from '@material-ui/core'
-import { XAxis, YAxis, AreaSeries, XYPlot, Hint, ChartLabel } from 'react-vis';
+import { XAxis, YAxis, AreaSeries, XYPlot, Hint } from 'react-vis';
 import bytes from 'bytes';
 import moment from 'moment';
 
@@ -32,10 +32,6 @@ class MemoryUsageChart extends React.Component <IMemoryUsageChartProps, IMemoryU
         };
     }
 
-    public onMouseLeave = () => {
-        this.setState({ pos: { x: 0, y: 0}});
-    }
-
     public render(){
         const data = this.formatData(this.props.data);
         const { pos } = this.state;
@@ -58,21 +54,12 @@ class MemoryUsageChart extends React.Component <IMemoryUsageChartProps, IMemoryU
                 </Hint>
                 <XAxis
                     color="#3f51b5"
-                    title="Time"
                     tickTotal={3}
                     tickFormat={this.formatDateAndTime}
                 />
                 <YAxis
                     color="#3f51b5"
-                    title="Memory Usage (GB)"
                     tickFormat={this.formatMemoryUsage}
-                />
-                <ChartLabel
-                    text="Memory Usage (GB)"
-                    includeMargin={false}
-                    xPercent={0}
-                    yPercent={0}
-                    className="alt-x-label"
                 />
                 <AreaSeries
                     data={data}
@@ -85,6 +72,10 @@ class MemoryUsageChart extends React.Component <IMemoryUsageChartProps, IMemoryU
         );
     }
 
+    /**
+     * Converts memory usage from bytes to GB
+     * @param value memory usage in bytes
+     */
     public formatMemoryUsage = (value: number) => {
         const gbValue = bytes.format(value, {unit: 'GB'});
         const indexOfGB = gbValue.indexOf('GB');
@@ -95,14 +86,32 @@ class MemoryUsageChart extends React.Component <IMemoryUsageChartProps, IMemoryU
         return gbValue.substring(0, indexOfGB);
     }
 
+    /**
+     * Formats timestamp from milliseconds to `MM/DD, hh:mm a`
+     * @param timestamp timestamp in milliseconds
+     */
     public formatDateAndTime = (timestamp: number) => {
-        return moment(timestamp).format('MMM DD, YY hh:mm a');
+        return moment(timestamp).format('MM/DD, hh:mm a');
     }
 
+    /**
+     * updates X,Y coordinates of mouse in chart
+     */
     public onNearestX = (xyPos: IXYCoordinate) => {
         this.setState({pos: xyPos})
     }
 
+    /**
+     * Resets x,y pos to 0,0 on mouse leave
+     */
+    public onMouseLeave = () => {
+        this.setState({ pos: { x: 0, y: 0}});
+    }
+
+    /**
+     * Formats data from {timestamp, usage} into {x, y} values
+     * @param data list of memoryusage data
+     */
     public formatData = (data: IMemoryUsage[]) => {
         return data.map(({ usage, timestamp }: IMemoryUsage) => ({
             x: parseInt(timestamp),

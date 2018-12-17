@@ -5,6 +5,12 @@ const defaultState: IStore = {
     data: [],
 };
 
+
+/**
+ * Reduces state data given an action
+ * @param state store state
+ * @param action dispatched action
+ */
 export const memoryUsageReducer = (state: IStore = defaultState, action: IAction) => {
     switch(action.type) {
         case ACTION_TYPES.FETCH_DATA_SUCCESS: {

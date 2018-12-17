@@ -1,6 +1,11 @@
 import { Express, Request, Response } from 'express-serve-static-core';
 import API from './api';
 
+/**
+ * Handles fetching and responding with memoryusage data
+ * @param req Express Request object
+ * @param res Express Response Object
+ */
 export const fetchMemoryUsage = (req: Request, res: Response) => {
     let {
         body: { startTime, endTime },
@@ -14,6 +19,11 @@ export const fetchMemoryUsage = (req: Request, res: Response) => {
     });
 }
 
+/**
+ * Handles fetching OS Spec
+ * @param req Express Request object
+ * @param res Express Response Object
+ */
 export const getOSSpec = (req: Request, res: Response) => {
     API.getOSSpec((spec) => {
         res.json(spec);

@@ -6,6 +6,11 @@ type TCallback = (...args) => any;
 
 class API {
     private interval: NodeJS.Timer;
+
+    /**
+     * Fetches and store memory usage at a given interval
+     * @param interval interval for fetching and storing memory usage
+     */
     public startIntervalFetching = (interval: number) => {
         if(this.interval) {
             this.clearIntervalFetching();
@@ -16,10 +21,17 @@ class API {
         }, interval);
     }
 
+    /**
+     * Removes interval function
+     */
     public clearIntervalFetching = () => {
         clearInterval(this.interval);
     }
 
+    /**
+     * Fetches and Stores memory usage to db
+     * @param callback callback function with list of data
+     */
     public addMemoryUsageToDB = (callback: TCallback) => {
         const date = new Date();
         const usage = os.totalmem() - os.freemem();
@@ -39,6 +51,12 @@ class API {
             });
     }
 
+    /**
+     * fetches memory usage data
+     * @param startTime timestamp in milliseconds
+     * @param endTime timestamp in millisecond
+     * @param callback callback function with list of data
+     */
     public fetchData = (startTime: number, endTime: number, callback?: TCallback) => {
         const condition = {
             usage: {
@@ -62,6 +80,10 @@ class API {
         });
     }
 
+    /**
+     * Fetches OS sepc
+     * @param callback callback function with os spec
+     */
     public getOSSpec = (callback: TCallback) => {
         const memory = os.totalmem();
         const CPUs = os.cpus();
@@ -79,6 +101,14 @@ class API {
         })
     }
     
+
+    /**
+     * parses data within the range of starttime and endtime
+     * @param data list of memoryusage - timestamp data
+     * @param startTime timestamp in milliseconds
+     * @param endTime timestamp in milliseconds
+     * @param callback callback function with data between startTime and endTime
+     */
     public parseData = (data: any[], startTime: number, endTime: number, callback: TCallback) => {
         const outputData = [];
         for(let i = 0; i < data.length; i++) {

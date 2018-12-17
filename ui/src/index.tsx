@@ -6,6 +6,7 @@ import './index.css';
 import { MemoryUsageChart } from './components';
 import { store } from './store';
 
+// Render App
 ReactDOM.render(
     <Provider store={store}>
         <MemoryUsageChart />

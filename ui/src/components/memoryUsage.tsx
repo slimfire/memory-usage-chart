@@ -28,6 +28,9 @@ interface IState {
 type IProps = IMemoryUsageProps & IDispatchToProps;
 
 class MemoryUsageChart extends React.Component<IProps, IState> {
+	/**
+	 * Sets default values
+	 */
 	public static defaultProps: any = {
 		OSSpec: {
 			memory: 0,
@@ -39,6 +42,9 @@ class MemoryUsageChart extends React.Component<IProps, IState> {
 		memoryUsageData: [],
 	}
 
+	/**
+	 * On component mount, fetch data from start to current and fetch OS Spec
+	 */
 	public componentDidMount() {
 		const startTime = -Infinity;
 		const endTime = Infinity;
@@ -46,6 +52,10 @@ class MemoryUsageChart extends React.Component<IProps, IState> {
 		this.props.fetchOSSpec();
 	}
 
+	/**
+	 * Updates the component if newProps != this.props
+	 * @param newProps new props
+	 */
 	public shouldComponentUpdate(newProps: IProps) {
 		return !isEqual(newProps, this.props);
 	}
@@ -57,7 +67,7 @@ class MemoryUsageChart extends React.Component<IProps, IState> {
 	  return (
 		<Grid container spacing={24} >
 			<Grid item xs={12}>
-				<Paper className={`${classes.paper} ${classes.title}`}>OS Memory Usage</Paper >
+				<Paper className={`${classes.paper} ${classes.title}`}>OS Memory Usage (GB/Timestamp)</Paper >
 			</Grid>
 			<Grid item xs={3}>
 				<Paper className={`${classes.paper} ${classes.spec} ${classes.specPaper}`} >
@@ -80,11 +90,17 @@ class MemoryUsageChart extends React.Component<IProps, IState> {
 	}
 }
 
+/**
+ * Maps Dispatch functions to props
+ */
 const mapDispatchToProps: IDispatchToProps = {
 	fetchData: fetchDataThunkAction,
 	fetchOSSpec: fetchOSSpecThunkAction,
 }
 
+/**
+ * Maps state to props
+ */
 const mapStateToProps = (state: IStore) => {
 	return {
 		memoryUsageData: state.data,
