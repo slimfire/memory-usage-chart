@@ -3,6 +3,15 @@ import os, { cpus } from 'os';
 import { callbackify } from 'util';
 
 type TCallback = (...args) => any;
+/*
+ * Note:
+ * * Server doesn't know how to handle high volume traffic, "cough",
+ *   from a variety of end points and so when it gets one, it crashs. 
+ *   As a result, critical and time sensitive requests end up getting 
+ *   interrupted leading to a failure.
+ * Todo:
+ * * How does one handle such high volume traffic?
+*/
 
 class API {
     private interval: NodeJS.Timer;
@@ -29,13 +38,7 @@ class API {
     }
 
     /**
-     * Note:
-     * * Server doesn't know how to handle high volume traffic, "cough",
-     *   from a variety of end points and so when it gets one, it crashs. 
-     *   As a result, critical and time sensitive requests end up getting 
-     *   interrupted leading to a failure.
-     * Todo:
-     * * How does one handle such high volume traffic?
+     * Fetches and Stores memory usage to db
      * @param callback callback function with list of data
      */
     public addMemoryUsageToDB = (callback: TCallback) => {
