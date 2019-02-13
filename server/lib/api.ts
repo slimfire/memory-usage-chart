@@ -29,7 +29,13 @@ class API {
     }
 
     /**
-     * Fetches and Stores memory usage to db
+     * Note:
+     * * Server doesn't know how to handle high volume traffic, "cough",
+     *   from a variety of end points and so when it gets one, it crashs. 
+     *   As a result, critical and time sensitive requests end up getting 
+     *   interrupted leading to a failure.
+     * Todo:
+     * * How does one handle such high volume traffic?
      * @param callback callback function with list of data
      */
     public addMemoryUsageToDB = (callback: TCallback) => {
