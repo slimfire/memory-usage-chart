@@ -1,5 +1,5 @@
 # Memory Usage
-Chart displaying memory usage of an OS
+Monitoring of an OS Memory Usage
 
 ### Setup
 * Set `DB_URL` and `INTERVAL` under /server/config.ts
@@ -13,3 +13,10 @@ Chart displaying memory usage of an OS
   - Node.js
   - Express.js
   - MongoDB
+  - Cough
+
+### Todo:
+- Forecasting
+
+
+###### Note: You are responsible for the resulting application.
