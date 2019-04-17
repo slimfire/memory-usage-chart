@@ -16,6 +16,7 @@ Monitoring of an OS Memory Usage
   - Cough
 
 ### Todo:
+- Service enabling/disabling
 - Forecasting
 
 
